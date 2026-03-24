@@ -2402,23 +2402,38 @@ function toggleModule(header) {
 function handleSubmit(e) {
   e.preventDefault();
   
-  // Validate business email
   const email = document.getElementById('email').value;
-  const freeEmails = ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com', 'aol.com', 'icloud.com', 'protonmail.com'];
+  const blocked = ['gmail.com','googlemail.com','hotmail.com','hotmail.co.uk','hotmail.fr','hotmail.de','hotmail.es','hotmail.it',
+'outlook.com','outlook.es','outlook.co.uk','live.com','live.com.mx','msn.com',
+'yahoo.com','yahoo.com.mx','yahoo.co.uk','yahoo.es','yahoo.fr','yahoo.de','yahoo.it','ymail.com',
+'aol.com','icloud.com','me.com','mac.com','protonmail.com','proton.me','pm.me',
+'zoho.com','mail.com','gmx.com','gmx.de','gmx.net','yandex.com','yandex.ru',
+'tutanota.com','tuta.io','fastmail.com','hey.com','inbox.com',
+'rediffmail.com','qq.com','163.com','126.com','sina.com','naver.com',
+'daum.net','hanmail.net','web.de','t-online.de','orange.fr','free.fr',
+'laposte.net','wanadoo.fr','libero.it','virgilio.it','terra.com.mx'];
   const domain = email.split('@')[1]?.toLowerCase();
   
-  if (freeEmails.includes(domain)) {
-    alert('Por favor utiliza tu correo corporativo. Direcciones personales (@gmail, @hotmail, @yahoo, etc.) no son aceptadas para este programa.');
+  if (blocked.includes(domain)) {
+    alert('⚠️ Solo se aceptan correos corporativos.\n\nDirecciones como @gmail, @hotmail, @yahoo, @outlook no son válidas.\nPor favor ingresa tu correo de empresa.');
     return;
   }
   
-  // Show success
-  document.getElementById('formContainer').classList.add('submitted');
-  
-  // Here you would integrate with your backend/webhook
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
-  console.log('GFDS Form Submission:', data);
+  data.source = document.title;
+  data.timestamp = new Date().toISOString();
+  data.url = window.location.href;
+  
+  fetch('https://hook.eu1.make.com/6c7yq50qkr6ena51ccqxsxgrydsfwx3k', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => {
+    document.getElementById('formContainer').classList.add('submitted');
+  }).catch(() => {
+    document.getElementById('formContainer').classList.add('submitted');
+  });
 }
 
 // Scroll animations
