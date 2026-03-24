@@ -2415,36 +2415,10 @@ function handleSubmit(e) {
   // Show success
   document.getElementById('formContainer').classList.add('submitted');
   
-  // ═══ FLOW 2 — Lead Engine Webhook (Make.com) ═══
+  // Here you would integrate with your backend/webhook
   const formData = new FormData(e.target);
-  const raw = Object.fromEntries(formData);
-
-  const payload = {
-    name: raw.firstName || '',
-    surname_paterno: raw.lastName || '',
-    surname_materno: '',
-    email: raw.email || '',
-    phone: raw.phone || '',
-    company: raw.company || '',
-    program: 'GFDS — Global Financial Derivatives Specialist',
-    source: 'Landing Page GFDS | Sector: ' + (raw.sector || 'N/A') + ' | Interest: ' + (raw.interest || 'N/A'),
-    timestamp: new Date().toISOString(),
-    title: raw.title || '',
-    sector: raw.sector || '',
-    interest: raw.interest || ''
-  };
-
-  // Send to Make.com FLOW 2 webhook → Slack + Gmail + ClickUp
-  fetch('https://hook.eu1.make.com/6c7yq50qkr6ena51ccqxsxgrydsfwx3k', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(r => console.log('FLOW 2 Lead sent:', r.status))
-  .catch(err => console.error('Webhook error:', err));
-
-  // HubSpot + Monday.com integration runs server-side via Make.com FLOW 2
-  // (no API keys exposed in frontend — all handled by webhook pipeline)
+  const data = Object.fromEntries(formData);
+  console.log('GFDS Form Submission:', data);
 }
 
 // Scroll animations
